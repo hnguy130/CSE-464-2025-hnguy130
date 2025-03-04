@@ -9,6 +9,7 @@ import guru.nidi.graphviz.parse.Parser;
 
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
+import guru.nidi.graphviz.engine.GraphvizCmdLineEngine;
 
 public class Grapher {
 
@@ -190,7 +191,7 @@ public class Grapher {
 			System.out.println("No graph loaded into system");
 			return;
 		}
-		
+		 Graphviz.useEngine(new guru.nidi.graphviz.engine.GraphvizCmdLineEngine().executable("/usr/local/bin/dot"));
 		Graphviz.fromGraph(graph).render(Format.PNG).toFile(new File(path));
 
 	}
