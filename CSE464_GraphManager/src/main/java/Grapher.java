@@ -9,7 +9,6 @@ import guru.nidi.graphviz.parse.Parser;
 
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
-import guru.nidi.graphviz.engine.GraphvizCmdLineEngine;
 
 public class Grapher {
 
@@ -192,7 +191,6 @@ public class Grapher {
 			return;
 		}
 		
-		Graphviz.useEngine(new GraphvizCmdLineEngine());
 		Graphviz.fromGraph(graph).render(Format.PNG).toFile(new File(path));
 
 	}
