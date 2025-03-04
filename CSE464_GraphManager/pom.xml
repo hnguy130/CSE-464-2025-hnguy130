@@ -24,6 +24,7 @@
 					<source>11</source>
 					<target>11</target>
 					<fork>true</fork>
+					<mainClass>Grapher</mainClass>
 					<executable>/usr/bin/javac</executable>
 				</configuration>
 			</plugin>
