@@ -193,7 +193,7 @@ public class Grapher {
 		}
 
 		Graphviz.fromGraph(graph).render(Format.PNG).toFile(new File(path));
-		System.out.println("PNG generated!");
+		System.out.println("PNG generated at : " + path);
 
 	}
 
