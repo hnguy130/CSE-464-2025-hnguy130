@@ -215,5 +215,21 @@ public class Grapher {
 
 	public static void main(String[] args) throws IOException {
 		Grapher grapher = new Grapher();
+		String test = "test.txt";
+		String output = "output.png";
+		grapher.parseGraph(test);
+		grapher.addNode("a");
+		grapher.addNode("b");
+		grapher.addNode("m");
+		String[] nodes = {"a","z","y"};
+		grapher.addNodes(nodes);
+		
+		grapher.addEdge("a", "b");
+		grapher.addEdge("d", "e");
+		grapher.addEdge("d", "f");
+		grapher.addEdge("x", "y");
+		
+		grapher.outputGraphics(output);
+		
 	}
 }

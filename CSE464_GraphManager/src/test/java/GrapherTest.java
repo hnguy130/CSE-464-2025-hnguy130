@@ -121,6 +121,4 @@ public class GrapherTest {
 		assertTrue(Files.exists(Paths.get("output.png")));
 	}
 	
-	
-	
 }
