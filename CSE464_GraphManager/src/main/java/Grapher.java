@@ -141,7 +141,7 @@ public class Grapher {
 
 		for (Link edge : from.links()) {
 			if (edge.to().name().value().equals(to1)) {
-				System.out.println( from1 + " -> " + to1 + " already exists\n");
+				System.out.println(from1 + " -> " + to1 + " already exists\n");
 				return;
 			}
 		}
@@ -191,7 +191,7 @@ public class Grapher {
 			System.out.println("No graph loaded into system");
 			return;
 		}
-		
+
 		Graphviz.fromGraph(graph).render(Format.PNG).toFile(new File(path));
 
 	}
