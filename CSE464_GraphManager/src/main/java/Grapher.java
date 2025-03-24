@@ -2,6 +2,8 @@ import java.io.File;
 import java.nio.file.*;
 import java.io.IOException;
 
+import java.lang.reflect.Field;
+
 import java.util.ArrayList;
 
 import guru.nidi.graphviz.model.*;
@@ -131,7 +133,7 @@ public class Grapher {
 		if (from == null) {
 			from = Factory.mutNode(from1);
 			graph.add(from);
-			System.out.println("Node " + from1 + " doesn't exist in graph, adding node " + from1);
+			System.out.println("Node " + from1 + " as source node doesn't exist in graph, adding node " + from1);
 		}
 		if (to == null) {
 			to = Factory.mutNode(to1);
@@ -171,13 +173,14 @@ public class Grapher {
 			return;
 		}
 		
+		node.links().clear();
+		
 		for(MutableNode nodeIn : graph.nodes()) {
 			
 			ArrayList<Link> links = new ArrayList<>();
 			
 			for(Link link : nodeIn.links()) {
-				if(link.to().name().value().equals(label) 
-						|| link.from().name().value().equals(label)) {
+				if(link.to().name().value().equals(label)) {
 					links.add(link);
 				}
 			}
@@ -187,7 +190,22 @@ public class Grapher {
 			}
 		}
 		
-		graph.nodes().remove(node);
+		
+	    MutableGraph newGraph = Factory.mutGraph()
+	            .setDirected(graph.isDirected())
+	            .setStrict(graph.isStrict())
+	            .setCluster(graph.isCluster());
+	        
+	        // Copy all nodes except the one to remove
+	        for (MutableNode nodeIn : graph.nodes()) {
+	            if (!nodeIn.equals(node)) {
+	                newGraph.add(nodeIn);
+	            }
+	        }
+	        
+	        // Replace the current graph with the new one
+	        graph = newGraph;     
+	    
 		prepare();
 		System.out.println("Node " + label + " has been removed from graph\n");
 		
@@ -222,14 +240,15 @@ public class Grapher {
 		}
 		
 		 if (from == null) {
-		        System.out.println("Source node " + from1 + " doesn't exist in graph");
-		        return;
+		        System.out.println("Node " + from1 + " as source node doesn't exist in graph\n");
 		    }
 		 if (to == null) {
-		        System.out.println("Source node " + to1 + " doesn't exist in graph");
+		        System.out.println("Node " + to1 + " as destination node doesn't exist in graph\n");
+		    }
+		 if (from == null || to == null) {
 		        return;
 		    }
-		 
+
 		 Link edge = null;
 		 for (Link link : from.links()) {
 		        if (link.to().name().value().equals(to1)) {
@@ -322,6 +341,7 @@ public class Grapher {
 		
 		grapher.removeNode("a");
 		grapher.removeNodes(nodes);
+		grapher.removeEdge("a", "b");
 		grapher.outputGraph("output5.txt");
 		
 		grapher.outputGraphics(output);

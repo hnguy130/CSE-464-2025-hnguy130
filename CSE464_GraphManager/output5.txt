@@ -1,7 +1,7 @@
 Graph data: 
 
-Node amount: 8
-Label of nodes: a , d , e , f , m , x , y , z
+Node amount: 5
+Label of nodes: d , e , f , m , x
 
 Edge amount: 2
 Label of edges: 
