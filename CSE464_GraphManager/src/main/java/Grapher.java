@@ -170,9 +170,9 @@ public class Grapher {
 			return;
 		}
 		
-		ArrayList<Link> links = new ArrayList<>();
-		
 		for(MutableNode nodeIn : graph.nodes()) {
+			
+			ArrayList<Link> links = new ArrayList<>();
 			
 			for(Link link : nodeIn.links()) {
 				if(link.to().name().value().equals(label) 
@@ -187,7 +187,6 @@ public class Grapher {
 		}
 		
 		graph.nodes().remove(node);
-		
 		System.out.println("Node " + label + " has been removed from graph\n");
 		
 	}
