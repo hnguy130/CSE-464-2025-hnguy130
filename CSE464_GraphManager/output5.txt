@@ -1,10 +1,9 @@
-digraph {
-  a -> b;
-  a -> c;
-  a -> d;
-  d -> e;
-  d -> f;
-  m;
-  x -> y;
-  z;
-}
+Graph data: 
+
+Node amount: 8
+Label of nodes: a , d , e , f , m , x , y , z
+
+Edge amount: 2
+Label of edges: 
+d -> e
+d -> f

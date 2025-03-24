@@ -109,39 +109,6 @@ public class Grapher {
 		prepare();
 		return;
 	}
-
-	public void removeNode(String label) {
-		if (graph == null) {
-			System.out.println("No graph loaded into system");
-			return;
-		}
-		
-		MutableNode node = null;
-		for (MutableNode nodeIn : graph.nodes()) {
-			if (nodeIn.name().value().equals(label)) {
-				node = nodeIn;
-			}
-		}
-		
-		if(node == null) {
-			System.out.println("Node " + label + " doesn't exist in graph");
-			return;
-		}
-		
-		for(MutableNode nodeIn : graph.nodes()) {
-			
-			for(Link link : node.links()) {
-				if(link.to().name().value().equals(label) 
-						|| link.from().name().value().equals(label)) {
-					node.links().remove(link);
-				}
-			}
-		}
-		graph.nodes().remove(node);
-		prepare();
-		System.out.println("Node " + label + " has been removed from graph\n");
-		
-	}
 	
 	public void addEdge(String from1, String to1) {
 
@@ -184,6 +151,96 @@ public class Grapher {
 		prepare();
 	}
 
+	public void removeNode(String label) {
+		if (graph == null) {
+			System.out.println("No graph loaded into system");
+			return;
+		}
+		
+		MutableNode node = null;
+		
+		for (MutableNode nodeIn : graph.nodes()) {
+			if (nodeIn.name().value().equals(label)) {
+				node = nodeIn;
+			}
+		}
+		
+		if(node == null) {
+			System.out.println("Node " + label + " doesn't exist in graph");
+			return;
+		}
+		
+		ArrayList<Link> links = new ArrayList<>();
+		
+		for(MutableNode nodeIn : graph.nodes()) {
+			
+			for(Link link : nodeIn.links()) {
+				if(link.to().name().value().equals(label) 
+						|| link.from().name().value().equals(label)) {
+					links.add(link);
+				}
+			}
+			
+			for(Link link : links) {
+				nodeIn.links().remove(link);
+			}
+		}
+		
+		graph.nodes().remove(node);
+		
+		System.out.println("Node " + label + " has been removed from graph\n");
+		
+	}
+	
+	public void removeNodes(String[] label) {
+		if (graph == null) {
+			System.out.println("No graph loaded into system");
+			return;
+		}
+		
+		for(String node : label) {
+			removeNode(node);
+		}
+	}
+
+	public void removeEdge(String from1, String to1) {
+		if (graph == null) {
+			System.out.println("No graph loaded into system");
+			return;
+		}
+		
+		MutableNode from = null, to = null;
+		
+		for (MutableNode node : graph.nodes()) {
+			if (node.name().value().equals(from1)) {
+				from = node;
+			}
+			if (node.name().value().equals(to1)) {
+				to = node;
+			}
+		}
+		
+		 if (from == null) {
+		        System.out.println("Source node " + from1 + " doesn't exist in graph");
+		        return;
+		    }
+		 if (to == null) {
+		        System.out.println("Source node " + to1 + " doesn't exist in graph");
+		        return;
+		    }
+		 
+		 Link edge = null;
+		 for (Link link : from.links()) {
+		        if (link.to().name().value().equals(to1)) {
+		            edge = link;
+		            break;
+		        }
+		    }
+		 from.links().remove(edge);
+		 System.out.println("Edge from " + from1 + " to " + to1 + " has been removed from graph\n");
+		 prepare();
+	}
+	
 	public void outputDOTGraph(String path) throws IOException {
 		if (graph == null) {
 			System.out.println("No graph loaded into system");
@@ -263,7 +320,8 @@ public class Grapher {
 		grapher.addEdge("x", "y");
 		
 		grapher.removeNode("a");
-		grapher.outputGraph("output.txt");
+		grapher.removeNodes(nodes);
+		grapher.outputGraph("output5.txt");
 		
 		grapher.outputGraphics(output);
 		
