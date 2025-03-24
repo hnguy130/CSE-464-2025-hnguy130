@@ -162,6 +162,7 @@ public class Grapher {
 		for (MutableNode nodeIn : graph.nodes()) {
 			if (nodeIn.name().value().equals(label)) {
 				node = nodeIn;
+				break;
 			}
 		}
 		
@@ -187,6 +188,7 @@ public class Grapher {
 		}
 		
 		graph.nodes().remove(node);
+		prepare();
 		System.out.println("Node " + label + " has been removed from graph\n");
 		
 	}
