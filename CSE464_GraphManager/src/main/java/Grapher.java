@@ -110,6 +110,39 @@ public class Grapher {
 		return;
 	}
 
+	public void removeNode(String label) {
+		if (graph == null) {
+			System.out.println("No graph loaded into system");
+			return;
+		}
+		
+		MutableNode node = null;
+		for (MutableNode nodeIn : graph.nodes()) {
+			if (nodeIn.name().value().equals(label)) {
+				node = nodeIn;
+			}
+		}
+		
+		if(node == null) {
+			System.out.println("Node " + label + " doesn't exist in graph");
+			return;
+		}
+		
+		for(MutableNode nodeIn : graph.nodes()) {
+			
+			for(Link link : node.links()) {
+				if(link.to().name().value().equals(label) 
+						|| link.from().name().value().equals(label)) {
+					node.links().remove(link);
+				}
+			}
+		}
+		graph.nodes().remove(node);
+		prepare();
+		System.out.println("Node " + label + " has been removed from graph\n");
+		
+	}
+	
 	public void addEdge(String from1, String to1) {
 
 		if (graph == null) {
@@ -228,6 +261,9 @@ public class Grapher {
 		grapher.addEdge("d", "e");
 		grapher.addEdge("d", "f");
 		grapher.addEdge("x", "y");
+		
+		grapher.removeNode("a");
+		grapher.outputGraph("output.txt");
 		
 		grapher.outputGraphics(output);
 		
