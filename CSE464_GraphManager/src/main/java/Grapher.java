@@ -10,7 +10,6 @@ import guru.nidi.graphviz.parse.Parser;
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
 
-
 public class Grapher {
 
 	public MutableGraph graph;
@@ -299,16 +298,16 @@ public class Grapher {
 		parents.add("none");
 
 		while (!queue.isEmpty()) {
-			String current = queue.removeLast();
+			String current = queue.remove(0);
 
 			for (Link link : edgeList) {
 				if (link.from().name().value().equals(current)) {
 					String child = link.to().name().value();
 
 					if (!visited.contains(child)) {
-						queue.add(queue.size(),child);
-						visited.add(visited.size()-1,child);
-						parents.add(parents.size()-1,current);
+						queue.add(child);
+						visited.add(child);
+						parents.add(current);
 
 						if (child.equals(to)) {
 							ArrayList<String> path = new ArrayList<>();
@@ -319,7 +318,7 @@ public class Grapher {
 								if (node.equals(from)) {
 									break;
 								} else {
-									int index = visited.indexOf(node);
+									int index = visited.indexOf(node) - 1;
 									node = parents.get(index);
 								}
 							}
@@ -402,7 +401,7 @@ public class Grapher {
 		grapher.parseGraph(test);
 
 		// grapher.removeNode("b");
-		System.out.println(grapher.GraphSearch("b", "c").toString());
+		System.out.println(grapher.GraphSearch("a", "c").toString());
 
 		grapher.outputGraph("output5.txt");
 
