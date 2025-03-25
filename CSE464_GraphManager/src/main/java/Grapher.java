@@ -10,6 +10,8 @@ import guru.nidi.graphviz.parse.Parser;
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
 
+enum Algorithm { BFS , DFS }
+
 public class Grapher {
 
 	public MutableGraph graph;
