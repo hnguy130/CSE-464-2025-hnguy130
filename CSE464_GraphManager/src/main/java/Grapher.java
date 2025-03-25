@@ -334,7 +334,7 @@ public class Grapher {
 			}
 		}
 
-		return null;
+		return null; 
 	}
 	
 	public void outputDOTGraph(String path) throws IOException {
