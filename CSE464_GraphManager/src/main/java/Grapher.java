@@ -266,7 +266,7 @@ public class Grapher {
 		 prepare();
 	}
 	
-	public Path GraphSearch(String from, String to) {
+	public Path GraphSearchDFS(String from, String to) {
 
 		if (graph == null) {
 			System.out.println("No graph loaded into system");
