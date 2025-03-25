@@ -2,8 +2,6 @@ import java.io.File;
 import java.nio.file.*;
 import java.io.IOException;
 
-import java.lang.reflect.Field;
-
 import java.util.ArrayList;
 
 import guru.nidi.graphviz.model.*;
@@ -11,7 +9,6 @@ import guru.nidi.graphviz.parse.Parser;
 
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
-import guru.nidi.graphviz.engine.GraphvizCmdLineEngine;
 
 public class Grapher {
 
