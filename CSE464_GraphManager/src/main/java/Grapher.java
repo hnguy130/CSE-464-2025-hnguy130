@@ -10,6 +10,8 @@ import guru.nidi.graphviz.parse.Parser;
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
 
+enum Algorithm{ BFS, DFS}
+
 public class Grapher {
 
 	public MutableGraph graph;
@@ -261,6 +263,19 @@ public class Grapher {
 		prepare();
 	}
 
+	public Path GraphSearch(String from, String to, Algorithm algo) {
+		if(algo == Algorithm.BFS) {
+			System.out.println(GraphSearchBFS(from,to) + "\n");
+			return GraphSearchBFS(from,to);
+		}
+		else if (algo == Algorithm.DFS) {
+			System.out.println(GraphSearchDFS(from,to) + "\n");
+			return GraphSearchDFS(from,to);
+		}
+		else 
+			return null;
+	}
+	
 	public Path GraphSearchBFS(String from, String to) {
 
 	if (graph == null) {
@@ -318,11 +333,16 @@ public class Grapher {
 							if (node.equals(from)) {
 								break;
 							} else {
-								int index = visited.indexOf(node) - 1;
+								int index = visited.indexOf(node);
 								node = parents.get(index);
 							}
 						}
 						return new Path(path);
+					}
+				}
+			}
+		}
+	}
 
 		return null;
 	}
@@ -460,16 +480,15 @@ public class Grapher {
 		nodeList.sort((a, b) -> a.name().value().compareTo(b.name().value()));
 		edgeList.sort((a, b) -> a.from().name().value().compareTo(b.from().name().value()));
 	}
-
+	
 	public static void main(String[] args) throws IOException {
+		
 		Grapher grapher = new Grapher();
 		String test = "test.txt";
-		String output = "output.png";
 		grapher.parseGraph(test);
 
+		
 		grapher.outputGraph("output5.txt");
-
-		grapher.outputGraphics(output);
-
+		
 	}
 }
