@@ -403,7 +403,7 @@ public class Grapher {
 		String output = "output.png";
 		grapher.parseGraph(test);
 		
-		grapher.removeNode("b");
+		System.out.println(grapher.GraphSearch("a", "c").toString());
 		
 		grapher.outputGraph("output5.txt");
 		
