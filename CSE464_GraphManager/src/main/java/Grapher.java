@@ -10,11 +10,7 @@ import guru.nidi.graphviz.parse.Parser;
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
 
-<<<<<<< HEAD
 enum Algorithm{ BFS, DFS }
-=======
-enum Algorithm { BFS , DFS }
->>>>>>> dfs
 
 public class Grapher {
 
@@ -270,11 +266,7 @@ public class Grapher {
 		 prepare();
 	}
 	
-<<<<<<< HEAD
 	public Path GraphSearchBFS(String from, String to) {
-=======
-	public Path GraphSearchDFS(String from, String to) {
->>>>>>> dfs
 
 		if (graph == null) {
 			System.out.println("No graph loaded into system");
@@ -311,26 +303,16 @@ public class Grapher {
 		parents.add("none");
 
 		while (!queue.isEmpty()) {
-<<<<<<< HEAD
 			String current = queue.remove(0);
-=======
-			String current = queue.removeLast();
->>>>>>> dfs
 
 			for (Link link : edgeList) {
 				if (link.from().name().value().equals(current)) {
 					String child = link.to().name().value();
 
 					if (!visited.contains(child)) {
-<<<<<<< HEAD
 						queue.add(child);
 						visited.add(child);
 						parents.add(current);
-=======
-						queue.add(queue.size(),child);
-						visited.add(visited.size()-1,child);
-						parents.add(parents.size()-1,current);
->>>>>>> dfs
 
 						if (child.equals(to)) {
 							ArrayList<String> path = new ArrayList<>();
@@ -341,11 +323,7 @@ public class Grapher {
 								if (node.equals(from)) {
 									break;
 								} else {
-<<<<<<< HEAD
 									int index = visited.indexOf(node) - 1;
-=======
-									int index = visited.indexOf(node);
->>>>>>> dfs
 									node = parents.get(index);
 								}
 							}
@@ -358,10 +336,7 @@ public class Grapher {
 
 		return null;
 	}
-<<<<<<< HEAD
 
-=======
->>>>>>> dfs
 	
 	public void outputDOTGraph(String path) throws IOException {
 		if (graph == null) {
