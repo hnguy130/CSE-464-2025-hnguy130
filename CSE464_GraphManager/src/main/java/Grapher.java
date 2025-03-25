@@ -264,6 +264,78 @@ public class Grapher {
 		 prepare();
 	}
 	
+	public Path GraphSearch(String from, String to) {
+
+		if (graph == null) {
+			System.out.println("No graph loaded into system");
+			return null;
+		}
+
+		MutableNode from1 = null, to1 = null;
+
+		for (MutableNode node : graph.nodes()) {
+			if (node.name().value().equals(from)) {
+				from1 = node;
+			}
+			if (node.name().value().equals(to)) {
+				to1 = node;
+			}
+		}
+
+		if (from1 == null) {
+			throw new IllegalArgumentException("Node " + from1 + " as source node doesn't exist in graph\n");
+		}
+		if (to1 == null) {
+			throw new IllegalArgumentException("Node " + to1 + " as a node doesn't exist in graph\n");
+		}
+		if (from1 == null || to1 == null) {
+			return null;
+		}
+
+		ArrayList<String> queue = new ArrayList<>();
+		ArrayList<String> visited = new ArrayList<>();
+		ArrayList<String> parents = new ArrayList<>();
+
+		queue.add(from);
+		visited.add(from);
+		parents.add("none");
+
+		while (!queue.isEmpty()) {
+			String current = queue.remove(0);
+
+			for (Link link : edgeList) {
+				if (link.from().name().value().equals(current)) {
+					String child = link.to().name().value();
+
+					if (!visited.contains(child)) {
+						queue.add(child);
+						visited.add(child);
+						parents.add(current);
+
+						if (child.equals(to)) {
+							ArrayList<String> path = new ArrayList<>();
+							String node = child;
+
+							while (true) {
+								path.add(0, node);
+								if (node.equals(from)) {
+									break;
+								} else {
+									int index = visited.indexOf(node) - 1;
+									node = parents.get(index);
+								}
+							}
+							return new Path(path);
+						}
+					}
+				}
+			}
+		}
+
+		return null;
+	}
+
+	
 	public void outputDOTGraph(String path) throws IOException {
 		if (graph == null) {
 			System.out.println("No graph loaded into system");
