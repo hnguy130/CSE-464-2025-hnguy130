@@ -1,11 +1,9 @@
 Graph data: 
 
-Node amount: 8
-Label of nodes: a , b , c , d , e , m , y , z
+Node amount: 4
+Label of nodes: a , b , c , d
 
-Edge amount: 4
+Edge amount: 2
 Label of edges: 
 a -> b
-a -> c
-a -> d
-d -> e
+b -> c

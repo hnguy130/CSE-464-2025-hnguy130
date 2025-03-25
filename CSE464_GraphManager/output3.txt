@@ -1,13 +1,10 @@
 Graph data: 
 
-Node amount: 8
-Label of nodes: a , b , c , d , e , f , x , y
+Node amount: 5
+Label of nodes: a , b , c , d , e
 
-Edge amount: 6
+Edge amount: 3
 Label of edges: 
 a -> b
-a -> c
-a -> d
+b -> c
 d -> e
-d -> f
-x -> y

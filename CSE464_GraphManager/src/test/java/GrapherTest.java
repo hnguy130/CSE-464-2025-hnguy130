@@ -15,13 +15,15 @@ public class GrapherTest {
 	}
 
 	@Test
-	public void feature1() throws IOException {
+	public void remove_node() throws IOException {
 		System.out.println("\n-----------------");
-		System.out.println("feature1 test");
+		System.out.println("remove node test");
 		System.out.println("-----------------\n");
 		String test = "test.txt";
 		String output = "output1.txt";
 		grapher.parseGraph(test);
+		
+		grapher.removeNode("e");
 		
 		grapher.outputGraph(output);
 
@@ -29,96 +31,69 @@ public class GrapherTest {
 		String expected = Files.readString(Paths.get("expected1.txt"));
 		assertEquals(expected, result);
 	}
-
+	
 	@Test
-	public void feature2() throws IOException {
+	public void remove_nodes() throws IOException {
 		System.out.println("\n-----------------");
-		System.out.println("feature2 test");
+		System.out.println("remove nodes test");
 		System.out.println("-----------------\n");
 		String test = "test.txt";
 		String output = "output2.txt";
 		grapher.parseGraph(test);
 		
-		grapher.addNode("a");
-		grapher.addNode("b");
-		grapher.addNode("m");
-		String[] nodes = {"a","z","y"};
-		grapher.addNodes(nodes);
+		String[] labels = {"e","f"};
+		grapher.removeNodes(labels);
 		
 		grapher.outputGraph(output);
+
 		String result = Files.readString(Paths.get("output2.txt"));
 		String expected = Files.readString(Paths.get("expected2.txt"));
 		assertEquals(expected, result);
 	}
 	
 	@Test
-	public void feature3() throws IOException {
+	public void remove_edge() throws IOException {
 		System.out.println("\n-----------------");
-		System.out.println("feature3 test");
+		System.out.println("remove edge test");
 		System.out.println("-----------------\n");
 		String test = "test.txt";
 		String output = "output3.txt";
 		grapher.parseGraph(test);
 		
-		grapher.addEdge("a", "b");
-		grapher.addEdge("d", "e");
-		grapher.addEdge("d", "f");
-		grapher.addEdge("x", "y");
+		grapher.removeEdge("e", "f");
 		
 		grapher.outputGraph(output);
+
 		String result = Files.readString(Paths.get("output3.txt"));
 		String expected = Files.readString(Paths.get("expected3.txt"));
 		assertEquals(expected, result);
 	}
-	
-	@Test
-	public void feature4_DOT() throws IOException {
+
+	@Test(expected = IllegalArgumentException.class)
+	public void remove_wrong_node() throws IOException {
 		System.out.println("\n-----------------");
-		System.out.println("feature4_DOT test");
+		System.out.println("remove wrong node test");
 		System.out.println("-----------------\n");
 		String test = "test.txt";
-		String output = "output4.txt";
 		grapher.parseGraph(test);
 		
-		grapher.addNode("a");
-		grapher.addNode("b");
-		grapher.addNode("m");
-		String[] nodes = {"a","z","y"};
-		grapher.addNodes(nodes);
-		
-		grapher.addEdge("a", "b");
-		grapher.addEdge("d", "e");
-		grapher.addEdge("d", "f");
-		grapher.addEdge("x", "y");
-		
-		grapher.outputDOTGraph(output);
-		String result = Files.readString(Paths.get("output4.txt"));
-		String expected = Files.readString(Paths.get("expected4.txt"));
-		assertEquals(expected, result);
+		String[] labels = {"e","e"};
+		grapher.removeNodes(labels);
+
 	}
 	
-	@Test
-	public void feature4_PNG() throws IOException {
+	@Test(expected = IllegalArgumentException.class)
+	public void remove_wrong_edge() throws IOException {
 		System.out.println("\n-----------------");
-		System.out.println("feature4_PNG test");
+		System.out.println("remove wrong edge test");
 		System.out.println("-----------------\n");
 		String test = "test.txt";
-		String output = "output.png";
 		grapher.parseGraph(test);
 		
-		grapher.addNode("a");
-		grapher.addNode("b");
-		grapher.addNode("m");
-		String[] nodes = {"a","z","y"};
-		grapher.addNodes(nodes);
+		grapher.removeEdge("e", "e");
 		
-		grapher.addEdge("a", "b");
-		grapher.addEdge("d", "e");
-		grapher.addEdge("d", "f");
-		grapher.addEdge("x", "y");
-		
-		grapher.outputGraphics(output);
-		assertTrue(Files.exists(Paths.get("output.png")));
+
 	}
 	
 }
+	
