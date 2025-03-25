@@ -19,6 +19,6 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
         
-    - name: Build with Maven
+    - name: Build
       working-directory: ./CSE464_GraphManager
       run: mvn -B package
