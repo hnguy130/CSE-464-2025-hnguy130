@@ -10,7 +10,6 @@ import guru.nidi.graphviz.parse.Parser;
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
 
-
 public class Grapher {
 
 	public MutableGraph graph;
@@ -109,7 +108,7 @@ public class Grapher {
 		prepare();
 		return;
 	}
-	
+
 	public void addEdge(String from1, String to1) {
 
 		if (graph == null) {
@@ -152,73 +151,70 @@ public class Grapher {
 	}
 
 	public void removeNode(String label) {
-		
+
 		if (graph == null) {
 			System.out.println("No graph loaded into system");
 			return;
 		}
-		
+
 		MutableNode node = null;
-		
+
 		for (MutableNode nodeIn : graph.nodes()) {
 			if (nodeIn.name().value().equals(label)) {
 				node = nodeIn;
 				break;
 			}
 		}
-		
-		if(node == null) {
-		    throw new IllegalArgumentException("Node " + label + " doesn't exist in graph");
+
+		if (node == null) {
+			throw new IllegalArgumentException("Node " + label + " doesn't exist in graph");
 		}
-		
-	    ArrayList<MutableNode> nodes = new ArrayList<>();
-    	for (MutableNode nodeIn : graph.nodes()) {
-    			nodes.add(nodeIn);
-    	}
-		
-		for(MutableNode nodeIn : graph.nodes()) {
-			
+
+		ArrayList<MutableNode> nodes = new ArrayList<>();
+		for (MutableNode nodeIn : graph.nodes()) {
+			nodes.add(nodeIn);
+		}
+
+		for (MutableNode nodeIn : graph.nodes()) {
+
 			ArrayList<Link> links = new ArrayList<>();
-			
-			for(Link link : nodeIn.links()) {
-				if(link.to().name().value().equals(label) || link.from().name().value().equals(label)) {
+
+			for (Link link : nodeIn.links()) {
+				if (link.to().name().value().equals(label) || link.from().name().value().equals(label)) {
 					links.add(link);
 				}
 			}
-			
-			for(Link link : links) {
+
+			for (Link link : links) {
 				nodeIn.links().remove(link);
-				
+
 			}
 		}
-		
-		
-	    MutableGraph newGraph = Factory.mutGraph()
-	            .setDirected(graph.isDirected())
-	            .setStrict(graph.isStrict())
-	            .setCluster(graph.isCluster());
-	    	
-	        for (MutableNode nodeIn : nodes) {
-	            if (!nodeIn.equals(node)) {
-	            	//System.out.println("looking at node " + nodeIn.toString());
-	                newGraph.add(nodeIn);
-	            }
-	        }
-	        
-	        graph = newGraph;     
-	    
+
+		MutableGraph newGraph = Factory.mutGraph().setDirected(graph.isDirected()).setStrict(graph.isStrict())
+				.setCluster(graph.isCluster());
+
+		for (MutableNode nodeIn : nodes) {
+			if (!nodeIn.equals(node)) {
+				// System.out.println("looking at node " + nodeIn.toString());
+				newGraph.add(nodeIn);
+			}
+		}
+
+		graph = newGraph;
+
 		prepare();
 		System.out.println("Node " + label + " has been removed from graph\n");
-		
+
 	}
-	
+
 	public void removeNodes(String[] label) {
 		if (graph == null) {
 			System.out.println("No graph loaded into system");
 			return;
 		}
-		
-		for(String node : label) {
+
+		for (String node : label) {
 			removeNode(node);
 		}
 	}
@@ -228,9 +224,9 @@ public class Grapher {
 			System.out.println("No graph loaded into system");
 			return;
 		}
-		
+
 		MutableNode from = null, to = null;
-		
+
 		for (MutableNode node : graph.nodes()) {
 			if (node.name().value().equals(from1)) {
 				from = node;
@@ -239,32 +235,31 @@ public class Grapher {
 				to = node;
 			}
 		}
-		
-		 if (from == null) {
-			 throw new IllegalArgumentException("Node " + from1 + " as source node doesn't exist in graph\n");
-		    }
-		 if (to == null) {
-			 throw new IllegalArgumentException("Node " + to1 + " as a node doesn't exist in graph\n");
-		    }
-		 if (from == null || to == null) {
-		        return;
-		    }
 
-		 Link edge = null;
-		 for (Link link : from.links()) {
-		        if (link.to().name().value().equals(to1)) {
-		            edge = link;
-		            break;
-		        }
-		    }
-		 if(edge == null) {
-			 throw new IllegalArgumentException("Node " + to1 + " as a destination node doesn't exist in graph\n");
-		 }
-		 from.links().remove(edge);
-		 System.out.println("Edge from " + from1 + " to " + to1 + " has been removed from graph\n");
-		 prepare();
+		if (from == null) {
+			throw new IllegalArgumentException("Node " + from1 + " as source node doesn't exist in graph\n");
+		}
+		if (to == null) {
+			throw new IllegalArgumentException("Node " + to1 + " as a node doesn't exist in graph\n");
+		}
+		if (from == null || to == null) {
+			return;
+		}
+
+		Link edge = null;
+		for (Link link : from.links()) {
+			if (link.to().name().value().equals(to1)) {
+				edge = link;
+				break;
+			}
+		}
+		if (edge == null) {
+			throw new IllegalArgumentException("Node " + to1 + " as a destination node doesn't exist in graph\n");
+		}
+		from.links().remove(edge);
+		System.out.println("Edge from " + from1 + " to " + to1 + " has been removed from graph\n");
+		prepare();
 	}
-
 
 	public Path GraphSearchBFS(String from, String to) {
 
@@ -332,82 +327,78 @@ public class Grapher {
 		return null;
 	}
 
+	public Path GraphSearchDFS(String from, String to) {
 
-
-public Path GraphSearchDFS(String from, String to) {
-
-	if (graph == null) {
-		System.out.println("No graph loaded into system");
-		return null;
-	}
-
-	MutableNode from1 = null, to1 = null;
-
-	for (MutableNode node : graph.nodes()) {
-		if (node.name().value().equals(from)) {
-			from1 = node;
+		if (graph == null) {
+			System.out.println("No graph loaded into system");
+			return null;
 		}
-		if (node.name().value().equals(to)) {
-			to1 = node;
+
+		MutableNode from1 = null, to1 = null;
+
+		for (MutableNode node : graph.nodes()) {
+			if (node.name().value().equals(from)) {
+				from1 = node;
+			}
+			if (node.name().value().equals(to)) {
+				to1 = node;
+			}
 		}
-	}
 
-	if (from1 == null) {
-		throw new IllegalArgumentException("Node " + from1 + " as source node doesn't exist in graph\n");
-	}
-	if (to1 == null) {
-		throw new IllegalArgumentException("Node " + to1 + " as a node doesn't exist in graph\n");
-	}
-	if (from1 == null || to1 == null) {
-		return null;
-	}
+		if (from1 == null) {
+			throw new IllegalArgumentException("Node " + from1 + " as source node doesn't exist in graph\n");
+		}
+		if (to1 == null) {
+			throw new IllegalArgumentException("Node " + to1 + " as a node doesn't exist in graph\n");
+		}
+		if (from1 == null || to1 == null) {
+			return null;
+		}
 
-	ArrayList<String> queue = new ArrayList<>();
-	ArrayList<String> visited = new ArrayList<>();
-	ArrayList<String> parents = new ArrayList<>();
+		ArrayList<String> queue = new ArrayList<>();
+		ArrayList<String> visited = new ArrayList<>();
+		ArrayList<String> parents = new ArrayList<>();
 
-	queue.add(from);
-	visited.add(from);
-	parents.add("none");
+		queue.add(from);
+		visited.add(from);
+		parents.add("none");
 
-	while (!queue.isEmpty()) {
-		String current = queue.removeLast();
+		while (!queue.isEmpty()) {
+			String current = queue.removeLast();
 
-		for (Link link : edgeList) {
-			if (link.from().name().value().equals(current)) {
-				String child = link.to().name().value();
+			for (Link link : edgeList) {
+				if (link.from().name().value().equals(current)) {
+					String child = link.to().name().value();
 
-				if (!visited.contains(child)) {
-					queue.add(queue.size(),child);
-					visited.add(visited.size()-1,child);
-					parents.add(parents.size()-1,current);
+					if (!visited.contains(child)) {
+						queue.add(queue.size(), child);
+						visited.add(visited.size() - 1, child);
+						parents.add(parents.size() - 1, current);
 
-					if (child.equals(to)) {
-						ArrayList<String> path = new ArrayList<>();
-						String node = child;
+						if (child.equals(to)) {
+							ArrayList<String> path = new ArrayList<>();
+							String node = child;
 
-						while (true) {
-							path.add(0, node);
-							if (node.equals(from)) {
-								break;
-							} else {
-								int index = visited.indexOf(node);
-								node = parents.get(index);
+							while (true) {
+								path.add(0, node);
+								if (node.equals(from)) {
+									break;
+								} else {
+									int index = visited.indexOf(node);
+									node = parents.get(index);
+								}
 							}
+							return new Path(path);
 						}
-						return new Path(path);
-					}
 
+					}
 				}
 			}
 		}
+
+		return null;
 	}
 
-}
-
-return null;
-}
-	
 	public void outputDOTGraph(String path) throws IOException {
 		if (graph == null) {
 			System.out.println("No graph loaded into system");
@@ -475,11 +466,10 @@ return null;
 		String test = "test.txt";
 		String output = "output.png";
 		grapher.parseGraph(test);
-		
-		
+
 		grapher.outputGraph("output5.txt");
-		
+
 		grapher.outputGraphics(output);
-		
+
 	}
 }
