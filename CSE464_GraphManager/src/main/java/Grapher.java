@@ -415,7 +415,7 @@ public class Grapher {
 					}
 				}
 			}
-			stack.removeLast();
+			stack.remove(stack.size()-1);
 		}
 		return null;
 	}
