@@ -201,7 +201,6 @@ public class Grapher {
 
 		for (MutableNode nodeIn : nodes) {
 			if (!nodeIn.equals(node)) {
-				// System.out.println("looking at node " + nodeIn.toString());
 				newGraph.add(nodeIn);
 			}
 		}
@@ -267,16 +266,14 @@ public class Grapher {
 	}
 
 	public Path GraphSearch(String from, String to, Algorithm algo) {
-		
+
 		if (algo == Algorithm.BFS) {
 			System.out.println(GraphSearchBFS(from, to).toString());
 			return GraphSearchBFS(from, to);
-		} 
-		else if (algo == Algorithm.DFS) {
+		} else if (algo == Algorithm.DFS) {
 			System.out.println(GraphSearchDFS(from, to).toString());
 			return GraphSearchDFS(from, to);
-		}
-		else
+		} else
 			return null;
 	}
 
@@ -343,6 +340,7 @@ public class Grapher {
 							}
 							return new Path(path, "BFS");
 						}
+
 					}
 				}
 			}
@@ -491,15 +489,15 @@ public class Grapher {
 		grapher.parseGraph(test);
 		grapher.outputGraph("graphData.txt");
 
-		//grapher.removeNode("b");
-		
-		//String[] nodes = {"a","b"};
-		//grapher.removeNodes(nodes);
-		
-		//grapher.removeEdge("a","b");
-		
-		//grapher.GraphSearch("a", "g", Algorithm.BFS);
-		//grapher.GraphSearch("a", "g", Algorithm.DFS);
+		// grapher.removeNode("b");
+
+		// String[] nodes = {"a","b"};
+		// grapher.removeNodes(nodes);
+
+		// grapher.removeEdge("a","e");
+
+		// grapher.GraphSearch("a", "g", Algorithm.BFS);
+		// grapher.GraphSearch("a", "g", Algorithm.DFS);
 
 		grapher.outputGraph("graphOutput.txt");
 
