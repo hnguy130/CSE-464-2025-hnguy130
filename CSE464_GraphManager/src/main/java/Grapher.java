@@ -489,15 +489,15 @@ public class Grapher {
 		grapher.parseGraph(test);
 		grapher.outputGraph("graphData.txt");
 
-		// grapher.removeNode("b");
+		 //grapher.removeNode("b");
 
-		// String[] nodes = {"a","b"};
-		// grapher.removeNodes(nodes);
+		 //String[] nodes = {"a","b"};
+		 //grapher.removeNodes(nodes);
 
-		// grapher.removeEdge("a","e");
+		 //grapher.removeEdge("a","e");
 
-		// grapher.GraphSearch("a", "g", Algorithm.BFS);
-		// grapher.GraphSearch("a", "g", Algorithm.DFS);
+		 grapher.GraphSearch("a", "g", Algorithm.BFS);
+		 grapher.GraphSearch("a", "g", Algorithm.DFS);
 
 		grapher.outputGraph("graphOutput.txt");
 
