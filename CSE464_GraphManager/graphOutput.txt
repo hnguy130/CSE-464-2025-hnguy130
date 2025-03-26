@@ -3,9 +3,10 @@ Graph data:
 Node amount: 8
 Label of nodes: a , b , c , d , e , f , g , h
 
-Edge amount: 9
+Edge amount: 10
 Label of edges: 
 a -> b
+a -> e
 b -> c
 c -> d
 d -> a

@@ -387,7 +387,7 @@ public class Grapher {
 
 		while (!stack.isEmpty()) {
 
-			String current = stack.getLast();
+			String current = stack.get(stack.size()-1);
 
 			for (Link link : edgeList) {
 				for (Link edge : edgeList) {
