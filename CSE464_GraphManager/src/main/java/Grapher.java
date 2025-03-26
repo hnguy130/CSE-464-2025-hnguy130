@@ -3,6 +3,7 @@ import java.nio.file.*;
 import java.io.IOException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import guru.nidi.graphviz.model.*;
 import guru.nidi.graphviz.parse.Parser;
@@ -10,7 +11,9 @@ import guru.nidi.graphviz.parse.Parser;
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
 
-enum Algorithm{ BFS, DFS}
+enum Algorithm {
+	BFS, DFS
+}
 
 public class Grapher {
 
@@ -264,90 +267,17 @@ public class Grapher {
 	}
 
 	public Path GraphSearch(String from, String to, Algorithm algo) {
-		if(algo == Algorithm.BFS) {
-			System.out.println(GraphSearchBFS(from,to) + "\n");
-			return GraphSearchBFS(from,to);
-		}
-		else if (algo == Algorithm.DFS) {
-			System.out.println(GraphSearchDFS(from,to) + "\n");
-			return GraphSearchDFS(from,to);
-		}
-		else 
+		if (algo == Algorithm.BFS) {
+			System.out.println(GraphSearchBFS(from, to).toString());
+			return GraphSearchBFS(from, to);
+		} else if (algo == Algorithm.DFS) {
+			System.out.println(GraphSearchDFS(from, to).toString());
+			return GraphSearchDFS(from, to);
+		} else
 			return null;
 	}
-	
+
 	public Path GraphSearchBFS(String from, String to) {
-
-	if (graph == null) {
-		System.out.println("No graph loaded into system");
-		return null;
-	}
-
-	MutableNode from1 = null, to1 = null;
-
-	for (MutableNode node : graph.nodes()) {
-		if (node.name().value().equals(from)) {
-			from1 = node;
-		}
-		if (node.name().value().equals(to)) {
-			to1 = node;
-		}
-	}
-
-	if (from1 == null) {
-		throw new IllegalArgumentException("Node " + from1 + " as source node doesn't exist in graph\n");
-	}
-	if (to1 == null) {
-		throw new IllegalArgumentException("Node " + to1 + " as a node doesn't exist in graph\n");
-	}
-	if (from1 == null || to1 == null) {
-		return null;
-	}
-
-	ArrayList<String> queue = new ArrayList<>();
-	ArrayList<String> visited = new ArrayList<>();
-	ArrayList<String> parents = new ArrayList<>();
-
-	queue.add(from);
-	visited.add(from);
-	parents.add("none");
-
-	while (!queue.isEmpty()) {
-		String current = queue.remove(0);
-
-		for (Link link : edgeList) {
-			if (link.from().name().value().equals(current)) {
-				String child = link.to().name().value();
-
-				if (!visited.contains(child)) {
-					queue.add(child);
-					visited.add(child);
-					parents.add(current);
-
-					if (child.equals(to)) {
-						ArrayList<String> path = new ArrayList<>();
-						String node = child;
-
-						while (true) {
-							path.add(0, node);
-							if (node.equals(from)) {
-								break;
-							} else {
-								int index = visited.indexOf(node);
-								node = parents.get(index);
-							}
-						}
-						return new Path(path);
-					}
-				}
-			}
-		}
-	}
-
-		return null;
-	}
-
-	public Path GraphSearchDFS(String from, String to) {
 
 		if (graph == null) {
 			System.out.println("No graph loaded into system");
@@ -384,16 +314,16 @@ public class Grapher {
 		parents.add("none");
 
 		while (!queue.isEmpty()) {
-			String current = queue.removeLast();
+			String current = queue.remove(0);
 
 			for (Link link : edgeList) {
 				if (link.from().name().value().equals(current)) {
 					String child = link.to().name().value();
 
 					if (!visited.contains(child)) {
-						queue.add(queue.size(), child);
-						visited.add(visited.size() - 1, child);
-						parents.add(parents.size() - 1, current);
+						queue.add(child);
+						visited.add(child);
+						parents.add(current);
 
 						if (child.equals(to)) {
 							ArrayList<String> path = new ArrayList<>();
@@ -408,14 +338,84 @@ public class Grapher {
 									node = parents.get(index);
 								}
 							}
-							return new Path(path);
+							return new Path(path, "BFS");
 						}
-
 					}
 				}
 			}
 		}
 
+		return null;
+	}
+
+	public Path GraphSearchDFS(String from, String to) {
+
+		if (graph == null) {
+			System.out.println("No graph loaded into system");
+			return null;
+		}
+
+		MutableNode from1 = null, to1 = null;
+
+		for (MutableNode node : graph.nodes()) {
+			if (node.name().value().equals(from)) {
+				from1 = node;
+			}
+			if (node.name().value().equals(to)) {
+				to1 = node;
+			}
+		}
+
+		if (from1 == null) {
+			throw new IllegalArgumentException("Node " + from1 + " as source node doesn't exist in graph\n");
+		}
+		if (to1 == null) {
+			throw new IllegalArgumentException("Node " + to1 + " as a node doesn't exist in graph\n");
+		}
+		if (from1 == null || to1 == null) {
+			return null;
+		}
+
+		ArrayList<String> stack = new ArrayList<>();
+		ArrayList<String> visited = new ArrayList<>();
+		HashMap<String, String> parent = new HashMap<>();
+
+		stack.add(from);
+		visited.add(from);
+		parent.put(from, "none");
+
+		while (!stack.isEmpty()) {
+
+			String current = stack.getLast();
+
+			for (Link link : edgeList) {
+				for (Link edge : edgeList) {
+
+					if (edge.from().name().value().equals(current)) {
+						String next = edge.to().name().value();
+
+						if (!visited.contains(next)) {
+							stack.add(next);
+							visited.add(next);
+							parent.put(next, current);
+							current = next;
+						}
+
+						if (current.equals(to)) {
+							ArrayList<String> path = new ArrayList<>();
+							String node = current;
+
+							while (!node.equals("none")) {
+								path.add(0, node);
+								node = parent.get(node);
+							}
+							return new Path(path, "DFS");
+						}
+					}
+				}
+			}
+			stack.removeLast();
+		}
 		return null;
 	}
 
@@ -480,15 +480,17 @@ public class Grapher {
 		nodeList.sort((a, b) -> a.name().value().compareTo(b.name().value()));
 		edgeList.sort((a, b) -> a.from().name().value().compareTo(b.from().name().value()));
 	}
-	
+
 	public static void main(String[] args) throws IOException {
-		
+
 		Grapher grapher = new Grapher();
 		String test = "test.txt";
 		grapher.parseGraph(test);
 
-		
+		grapher.GraphSearch("a", "g", Algorithm.BFS);
+		grapher.GraphSearch("a", "g", Algorithm.DFS);
+
 		grapher.outputGraph("output5.txt");
-		
+
 	}
 }

@@ -1,10 +1,2 @@
-digraph {
-  a -> b;
-  a -> c;
-  a -> d;
-  d -> e;
-  d -> f;
-  m;
-  x -> y;
-  z;
-}
+BFS: a->e->g
+DFS: a->e->f->g

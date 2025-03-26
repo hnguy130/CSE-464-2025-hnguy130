@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.io.IOException;
 
 public class GrapherTest {
@@ -23,7 +24,7 @@ public class GrapherTest {
 		String output = "output1.txt";
 		grapher.parseGraph(test);
 		
-		grapher.removeNode("e");
+		grapher.removeNode("a");
 		
 		grapher.outputGraph(output);
 
@@ -41,7 +42,7 @@ public class GrapherTest {
 		String output = "output2.txt";
 		grapher.parseGraph(test);
 		
-		String[] labels = {"e","f"};
+		String[] labels = {"a","b"};
 		grapher.removeNodes(labels);
 		
 		grapher.outputGraph(output);
@@ -77,7 +78,7 @@ public class GrapherTest {
 		String test = "test.txt";
 		grapher.parseGraph(test);
 		
-		String[] labels = {"e","e"};
+		String[] labels = {"a","a"};
 		grapher.removeNodes(labels);
 
 	}
@@ -90,9 +91,51 @@ public class GrapherTest {
 		String test = "test.txt";
 		grapher.parseGraph(test);
 		
-		grapher.removeEdge("e", "e");
+		grapher.removeEdge("a", "a");
 		
+	}
+	
+	@Test
+	public void search_correct() throws IOException {
+		System.out.println("\n-----------------");
+		System.out.println("search_correct test");
+		System.out.println("-----------------\n");
+		String test = "test.txt";
+		String output = "output4.txt";
+		grapher.parseGraph(test);
+		
+		Files.writeString(Paths.get(output),
+				grapher.GraphSearch("a", "g", Algorithm.BFS).toString());
+		
+		Files.writeString(Paths.get(output),
+				grapher.GraphSearch("a", "g", Algorithm.DFS).toString()
+				,StandardOpenOption.APPEND
+				,StandardOpenOption.CREATE);
 
+		String result = Files.readString(Paths.get("output4.txt"));
+		String expected = Files.readString(Paths.get("expected4.txt"));
+		assertEquals(expected, result);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void search_wrong() throws IOException {
+		System.out.println("\n-----------------");
+		System.out.println("search_wrong test");
+		System.out.println("-----------------\n");
+		String test = "test.txt";
+		String output = "output5.txt";
+		grapher.parseGraph(test);
+		
+		grapher.GraphSearch("a", "z", Algorithm.BFS);
+		grapher.GraphSearch("a", "z", Algorithm.DFS);
+		grapher.GraphSearch("a", "", Algorithm.BFS);
+		grapher.GraphSearch("a", "", Algorithm.DFS);
+		
+		grapher.outputGraph(output);
+
+		String result = Files.readString(Paths.get("output5.txt"));
+		String expected = Files.readString(Paths.get("expected5.txt"));
+		assertEquals(expected, result);
 	}
 	
 }
