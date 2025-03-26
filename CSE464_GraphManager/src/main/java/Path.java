@@ -14,6 +14,7 @@ public class Path {
 		return nodes.size();
 	}
 
+	@Override
 	public String toString() {
 
 		String path = searchType + ": ";

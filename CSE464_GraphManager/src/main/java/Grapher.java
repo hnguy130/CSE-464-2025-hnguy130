@@ -267,13 +267,16 @@ public class Grapher {
 	}
 
 	public Path GraphSearch(String from, String to, Algorithm algo) {
+		
 		if (algo == Algorithm.BFS) {
 			System.out.println(GraphSearchBFS(from, to).toString());
 			return GraphSearchBFS(from, to);
-		} else if (algo == Algorithm.DFS) {
+		} 
+		else if (algo == Algorithm.DFS) {
 			System.out.println(GraphSearchDFS(from, to).toString());
 			return GraphSearchDFS(from, to);
-		} else
+		}
+		else
 			return null;
 	}
 
@@ -307,11 +310,11 @@ public class Grapher {
 
 		ArrayList<String> queue = new ArrayList<>();
 		ArrayList<String> visited = new ArrayList<>();
-		ArrayList<String> parents = new ArrayList<>();
+		ArrayList<String> parent = new ArrayList<>();
 
 		queue.add(from);
 		visited.add(from);
-		parents.add("none");
+		parent.add("none");
 
 		while (!queue.isEmpty()) {
 			String current = queue.remove(0);
@@ -323,7 +326,7 @@ public class Grapher {
 					if (!visited.contains(child)) {
 						queue.add(child);
 						visited.add(child);
-						parents.add(current);
+						parent.add(current);
 
 						if (child.equals(to)) {
 							ArrayList<String> path = new ArrayList<>();
@@ -335,7 +338,7 @@ public class Grapher {
 									break;
 								} else {
 									int index = visited.indexOf(node);
-									node = parents.get(index);
+									node = parent.get(index);
 								}
 							}
 							return new Path(path, "BFS");
@@ -486,11 +489,19 @@ public class Grapher {
 		Grapher grapher = new Grapher();
 		String test = "test.txt";
 		grapher.parseGraph(test);
+		grapher.outputGraph("graphData.txt");
 
-		grapher.GraphSearch("a", "g", Algorithm.BFS);
-		grapher.GraphSearch("a", "g", Algorithm.DFS);
+		//grapher.removeNode("b");
+		
+		//String[] nodes = {"a","b"};
+		//grapher.removeNodes(nodes);
+		
+		//grapher.removeEdge("a","b");
+		
+		//grapher.GraphSearch("a", "g", Algorithm.BFS);
+		//grapher.GraphSearch("a", "g", Algorithm.DFS);
 
-		grapher.outputGraph("output5.txt");
+		grapher.outputGraph("graphOutput.txt");
 
 	}
 }
