@@ -389,7 +389,56 @@ public class Grapher {
 		}
 	}
 	
+	public interface searchStrategy {
+		public Path search(String from, String to);
+	}
+	
+	public class strategyBFS implements searchStrategy{
+		public searchBFS bfs = new searchBFS();
+		
+		public Path search(String from, String to) {
+			return bfs.search(from, to);
+		}
+	}
+	
+	public class strategyDFS implements searchStrategy{
+		public searchDFS dfs = new searchDFS();
+		
+		public Path search(String from, String to) {
+			return dfs.search(from, to);
+		}
+	}
+	
+	public class Context {
 
+		public searchStrategy searchType;
+
+		public Context(Algorithm algo) {
+			if(algo == Algorithm.BFS)
+				searchType = new strategyBFS();
+			else if (algo == Algorithm.DFS)
+				searchType = new strategyDFS();
+			else
+				searchType = null;
+		}
+
+		public Path search(String from, String to) {
+			if(searchType != null)
+				return searchType.search(from, to);
+			else
+				return null;
+		}
+	}
+
+	public Path GraphSearch(String from, String to, Algorithm algo) {
+
+		Context searcher = new Context(algo);
+
+		Path path = searcher.search(from, to);
+		System.out.println(path.toString());
+		return path;
+
+	}
 
 	public Path GraphSearchBFS(String from, String to) {
 
