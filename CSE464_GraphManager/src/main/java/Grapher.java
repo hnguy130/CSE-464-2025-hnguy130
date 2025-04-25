@@ -21,51 +21,50 @@ public class Grapher {
 	ArrayList<MutableNode> nodeList = new ArrayList<>();
 	ArrayList<Link> edgeList = new ArrayList<>();
 	public Parser parser = new Parser();
-	
-	//refactor 1
-	
+
+	// refactor 1
+
 	String ERROR_NO_GRAPH = "No graph loaded into system\n";
 	String ERROR_NO_FILE = "Graph txt not found: ";
-	
-	//refactor 2
-	
+
+	// refactor 2
+
 	public boolean graphExists() {
-		
+
 		if (graph == null) {
 			System.out.println(ERROR_NO_GRAPH);
 			return false;
-		}
-		else
+		} else
 			return true;
 	}
-	
-	//refactor 3
-	
+
+	// refactor 3
+
 	public File fileExists(String filepath) throws IOException {
-		
+
 		File txt = new File(filepath);
-		
+
 		if (!txt.exists()) {
 			throw new IOException(ERROR_NO_FILE + filepath);
 		}
 		return txt;
 	}
-	
-	//refactor 4
-	
+
+	// refactor 4
+
 	public MutableNode nodeExists(String label) {
-		
+
 		for (MutableNode node : graph.nodes()) {
 			if (node.name().value().equals(label))
 				return node;
 		}
-		
-			return null;
+
+		return null;
 	}
-	
-	//refactor 5
-	
-	public ArrayList<String> buildPath(String end, String start, HashMap<String, String> parent){
+
+	// refactor 5
+
+	public ArrayList<String> buildPath(String end, String start, HashMap<String, String> parent) {
 		ArrayList<String> path = new ArrayList<>();
 		String node = end;
 
@@ -73,18 +72,17 @@ public class Grapher {
 			path.add(0, node);
 			node = parent.get(node);
 		}
-		
+
 		return path;
 	}
-	
-	
+
 	public MutableGraph parseGraph(String filepath) throws IOException {
 
-		File txt = fileExists(filepath);	
-		
+		File txt = fileExists(filepath);
+
 		graph = parser.read(txt);
 		prepare();
-		
+
 		System.out.println("Graph file to be parsed with: " + filepath + "\n");
 
 		return graph;
@@ -124,10 +122,10 @@ public class Grapher {
 	}
 
 	public void outputGraph(String filepath) throws IOException {
-		
+
 		if (graphExists() == false)
 			return;
-		
+
 		prepare();
 		Files.writeString(Paths.get(filepath), toString());
 		System.out.println("Graph information written to: " + filepath + "\n");
@@ -137,8 +135,8 @@ public class Grapher {
 
 		if (graphExists() == false)
 			return;
-		
-		if(nodeExists(label) != null) {
+
+		if (nodeExists(label) != null) {
 			System.out.println("Duplicate node " + label + "\n");
 			return;
 		}
@@ -161,23 +159,23 @@ public class Grapher {
 		prepare();
 		return;
 	}
-	
+
 	public void addEdge(String from1, String to1) {
 
 		if (graphExists() == false)
 			return;
 
 		MutableNode from = null, to = null;
-		
-		if(nodeExists(from1) != null)
+
+		if (nodeExists(from1) != null)
 			from = nodeExists(from1);
 		else {
 			from = Factory.mutNode(from1);
 			graph.add(from);
 			System.out.println("Node " + from1 + " as source node doesn't exist in graph, adding node " + from1);
 		}
-		
-		if(nodeExists(to1) != null)
+
+		if (nodeExists(to1) != null)
 			to = nodeExists(to1);
 		else {
 			to = Factory.mutNode(to1);
@@ -203,11 +201,10 @@ public class Grapher {
 			return;
 
 		MutableNode node = null;
-		
-		if(nodeExists(label) != null) {
+
+		if (nodeExists(label) != null) {
 			node = nodeExists(label);
-		}
-		else
+		} else
 			throw new IllegalArgumentException("Node " + label + " doesn't exist in graph");
 
 		ArrayList<MutableNode> nodes = new ArrayList<>();
@@ -247,32 +244,32 @@ public class Grapher {
 	}
 
 	public void removeNodes(String[] label) {
-		
-		if(graphExists() == false)
+
+		if (graphExists() == false)
 			return;
 
 		for (String node : label) {
 			removeNode(node);
 		}
 	}
-	
+
 	public void removeEdge(String from1, String to1) {
-		
-		if(graphExists() == false)
+
+		if (graphExists() == false)
 			return;
 
 		MutableNode from = null, to = null;
-		
-		if(nodeExists(from1) != null)
+
+		if (nodeExists(from1) != null)
 			from = nodeExists(from1);
 		else
 			throw new IllegalArgumentException("Node " + from1 + " as source node doesn't exist in graph\n");
 
-		if(nodeExists(to1) != null)
+		if (nodeExists(to1) != null)
 			to = nodeExists(to1);
 		else
 			throw new IllegalArgumentException("Node " + to1 + " as a node doesn't exist in graph\n");
-		
+
 		Link edge = null;
 		for (Link link : from.links()) {
 			if (link.to().name().value().equals(to1)) {
@@ -287,28 +284,122 @@ public class Grapher {
 		System.out.println("Edge from " + from1 + " to " + to1 + " has been removed from graph\n");
 		prepare();
 	}
+	
+	// template class for pattern template
+	public abstract class templateSearch {
 
-	public Path GraphSearch(String from, String to, Algorithm algo) {
+		public Path search(String from, String to) {
+			if (graphExists() == false)
+				return null;
 
-		if (algo == Algorithm.BFS) {
-			System.out.println(GraphSearchBFS(from, to).toString());
-			return GraphSearchBFS(from, to);
-		} else if (algo == Algorithm.DFS) {
-			System.out.println(GraphSearchDFS(from, to).toString());
-			return GraphSearchDFS(from, to);
-		} else
-			return null;
+			if (nodeExists(from) == null)
+				throw new IllegalArgumentException("Node " + from + " as source node doesn't exist in graph\n");
+
+			if (nodeExists(to) == null)
+				throw new IllegalArgumentException("Node " + to + " as a node doesn't exist in graph\n");
+
+			Path path = searchHelper(from, to);
+			return path;
+		}
+
+		public abstract Path searchHelper(String from, String to);
 	}
+
+	public class searchBFS extends templateSearch {
+
+		@Override
+		public Path searchHelper(String from, String to) {
+
+			ArrayList<String> queue = new ArrayList<>();
+			ArrayList<String> visited = new ArrayList<>();
+			HashMap<String, String> parent = new HashMap<>();
+
+			queue.add(from);
+			visited.add(from);
+			parent.put(from, "none");
+
+			while (!queue.isEmpty()) {
+				String current = queue.remove(0);
+
+				for (Link link : edgeList) {
+					if (link.from().name().value().equals(current)) {
+						String child = link.to().name().value();
+
+						if (!visited.contains(child)) {
+							queue.add(child);
+							visited.add(child);
+							parent.put(child, current);
+
+							if (child.equals(to)) {
+
+								ArrayList<String> path = buildPath(child, from, parent);
+
+								return new Path(path, "BFS");
+							}
+						}
+					}
+				}
+			}
+
+			return null;
+		}
+	}
+
+	public class searchDFS extends templateSearch {
+
+		@Override
+		public Path searchHelper(String from, String to) {
+			ArrayList<String> stack = new ArrayList<>();
+			ArrayList<String> visited = new ArrayList<>();
+			HashMap<String, String> parent = new HashMap<>();
+
+			stack.add(from);
+			visited.add(from);
+			parent.put(from, "none");
+
+			while (!stack.isEmpty()) {
+
+				String current = stack.get(stack.size() - 1);
+
+				for (Link link : edgeList) {
+					for (Link edge : edgeList) {
+
+						if (edge.from().name().value().equals(current)) {
+							String next = edge.to().name().value();
+
+							if (!visited.contains(next)) {
+								stack.add(next);
+								visited.add(next);
+								parent.put(next, current);
+								current = next;
+							}
+
+							if (current.equals(to)) {
+
+								ArrayList<String> path = buildPath(current, from, parent);
+
+								return new Path(path, "DFS");
+							}
+						}
+					}
+				}
+				stack.remove(stack.size() - 1);
+			}
+			return null;
+		}
+	}
+	
+
 
 	public Path GraphSearchBFS(String from, String to) {
 
-		if(graphExists() == false)
+		if (graphExists() == false)
 			return null;
-		
-		if(nodeExists(from) == null)
+
+		if (nodeExists(from) == null)
 			throw new IllegalArgumentException("Node " + from + " as source node doesn't exist in graph\n");
 
-		if(nodeExists(to) == null)
+		if (nodeExists(to) == null)
 			throw new IllegalArgumentException("Node " + to + " as a node doesn't exist in graph\n");
 
 		ArrayList<String> queue = new ArrayList<>();
@@ -329,12 +420,12 @@ public class Grapher {
 					if (!visited.contains(child)) {
 						queue.add(child);
 						visited.add(child);
-						parent.put(child,current);
+						parent.put(child, current);
 
 						if (child.equals(to)) {
-							
+
 							ArrayList<String> path = buildPath(child, from, parent);
-										
+
 							return new Path(path, "BFS");
 						}
 					}
@@ -347,13 +438,13 @@ public class Grapher {
 
 	public Path GraphSearchDFS(String from, String to) {
 
-		if(graphExists() == false)
+		if (graphExists() == false)
 			return null;
 
-		if(nodeExists(from) == null)
+		if (nodeExists(from) == null)
 			throw new IllegalArgumentException("Node " + from + " as source node doesn't exist in graph\n");
 
-		if(nodeExists(to) == null)
+		if (nodeExists(to) == null)
 			throw new IllegalArgumentException("Node " + to + " as a node doesn't exist in graph\n");
 
 		ArrayList<String> stack = new ArrayList<>();
@@ -366,7 +457,7 @@ public class Grapher {
 
 		while (!stack.isEmpty()) {
 
-			String current = stack.get(stack.size()-1);
+			String current = stack.get(stack.size() - 1);
 
 			for (Link link : edgeList) {
 				for (Link edge : edgeList) {
@@ -382,22 +473,22 @@ public class Grapher {
 						}
 
 						if (current.equals(to)) {
-							
+
 							ArrayList<String> path = buildPath(current, from, parent);
-							
+
 							return new Path(path, "DFS");
 						}
 					}
 				}
 			}
-			stack.remove(stack.size()-1);
+			stack.remove(stack.size() - 1);
 		}
 		return null;
 	}
 
 	public void outputDOTGraph(String path) throws IOException {
-		
-		if(graphExists() == false)
+
+		if (graphExists() == false)
 			return;
 
 		// String content = graph.toString();
@@ -430,8 +521,8 @@ public class Grapher {
 	}
 
 	public void outputGraphics(String path) throws IOException {
-		
-		if(graphExists() == false)
+
+		if (graphExists() == false)
 			return;
 
 		Graphviz.fromGraph(graph).render(Format.PNG).toFile(new File(path));
@@ -462,15 +553,15 @@ public class Grapher {
 		grapher.parseGraph(test);
 		grapher.outputGraph("graphData.txt");
 
-		 //grapher.removeNode("b");
+		// grapher.removeNode("b");
 
 		// String[] nodes = {"a","b"};
 		// grapher.removeNodes(nodes);
 
-		 //grapher.removeEdge("a","e");
+		// grapher.removeEdge("a","e");
 
-		 grapher.GraphSearch("a", "g", Algorithm.BFS);
-		 grapher.GraphSearch("a", "g", Algorithm.DFS);
+		grapher.GraphSearch("a", "g", Algorithm.BFS);
+		grapher.GraphSearch("a", "g", Algorithm.DFS);
 
 		grapher.outputGraph("graphOutput.txt");
 
