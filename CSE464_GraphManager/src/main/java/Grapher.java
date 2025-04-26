@@ -64,20 +64,6 @@ public class Grapher {
 		return null;
 	}
 
-	// refactor 5
-
-	public ArrayList<String> buildPath(String end, String start, HashMap<String, String> parent) {
-		ArrayList<String> path = new ArrayList<>();
-		String node = end;
-
-		while (!node.equals("none")) {
-			path.add(0, node);
-			node = parent.get(node);
-		}
-
-		return path;
-	}
-
 	public MutableGraph parseGraph(String filepath) throws IOException {
 
 		File txt = fileExists(filepath);
@@ -307,6 +293,18 @@ public class Grapher {
 		public abstract Path searchHelper(String from, String to);
 	}
 
+	public ArrayList<String> buildPath(String start, String end, HashMap<String, String> parent) {
+		ArrayList<String> path = new ArrayList<>();
+		String node = end;
+
+		while (!node.equals("none")) {
+			path.add(0, node);
+			node = parent.get(node);
+		}
+
+		return path;
+	}
+	
 	public class searchBFS extends templateSearch {
 
 		@Override
@@ -315,10 +313,17 @@ public class Grapher {
 			ArrayList<String> queue = new ArrayList<>();
 			ArrayList<String> visited = new ArrayList<>();
 			HashMap<String, String> parent = new HashMap<>();
-
+			
+			ArrayList<String> currentPath = new ArrayList<>();
+			
 			queue.add(from);
 			visited.add(from);
 			parent.put(from, "none");
+			
+			currentPath = buildPath(from, from, parent);
+			System.out.print(" ");
+			printPath(currentPath);
+			System.out.println();
 
 			while (!queue.isEmpty()) {
 				String current = queue.remove(0);
@@ -331,10 +336,15 @@ public class Grapher {
 							queue.add(child);
 							visited.add(child);
 							parent.put(child, current);
+							
+							currentPath = buildPath(from, child, parent);
+							System.out.print(" ");
+							printPath(currentPath);
+							System.out.println();
 
 							if (child.equals(to)) {
-
-								ArrayList<String> path = buildPath(child, from, parent);
+								
+								ArrayList<String> path = buildPath(from, child, parent);
 
 								return new Path(path, "BFS");
 							}
@@ -351,21 +361,30 @@ public class Grapher {
 
 		@Override
 		public Path searchHelper(String from, String to) {
+			
 			ArrayList<String> stack = new ArrayList<>();
 			ArrayList<String> visited = new ArrayList<>();
 			HashMap<String, String> parent = new HashMap<>();
+			
+			ArrayList<String> currentPath = new ArrayList<>();
 
 			stack.add(from);
 			visited.add(from);
 			parent.put(from, "none");
+			
+			currentPath = buildPath(from, from, parent);
+			System.out.print(" ");
+			printPath(currentPath);
+			System.out.println();
 
 			while (!stack.isEmpty()) {
-
+				
 				String current = stack.get(stack.size() - 1);
 
 				for (Link link : edgeList) {
+					
 					for (Link edge : edgeList) {
-
+						
 						if (edge.from().name().value().equals(current)) {
 							String next = edge.to().name().value();
 
@@ -374,11 +393,16 @@ public class Grapher {
 								visited.add(next);
 								parent.put(next, current);
 								current = next;
+								
+								currentPath = buildPath(from, current, parent);
+								System.out.print(" ");
+								printPath(currentPath);
+								System.out.println();
 							}
 
 							if (current.equals(to)) {
 
-								ArrayList<String> path = buildPath(current, from, parent);
+								ArrayList<String> path = buildPath(from, current, parent);
 
 								return new Path(path, "DFS");
 							}
@@ -393,7 +417,7 @@ public class Grapher {
 	
 	public void printPath(ArrayList<String> path) {
 		
-		System.out.print(" visiting Path ");
+		System.out.print("visiting Path size " + path.size() + ": ");
 		
 		for(int i = 0; i <= path.size() - 1; i++) {
 			
@@ -404,8 +428,6 @@ public class Grapher {
 			else
 				System.out.print(current + " -> ");
 		}
-		
-		System.out.println("");
 	}
 	
 	public class searchRANDOM extends templateSearch {
@@ -420,8 +442,6 @@ public class Grapher {
 			ArrayList<String> path;
 			ArrayList<String> visited;
 			ArrayList<String> adjacent;
- 			
-			System.out.println("RANDOM: \n");
 			
 			for(int i = 0; i < 100; i++) {
 				
@@ -434,7 +454,7 @@ public class Grapher {
 				//current node at start
 				String current = from;
 				
-				System.out.println(" - New Search - ");
+				System.out.print(" - Search " + (i+1) + " - ");
 				
 				//check if there are adjacent nodes
 				// if none, return null path
@@ -448,7 +468,6 @@ public class Grapher {
 					return null;
 				
 				boolean dead_end = false;
-				
 				while (dead_end == false) {
 
 				//selecting random adjacent node
@@ -460,15 +479,12 @@ public class Grapher {
 					}
 				if(all_visited == true) {
 					printPath(path);
-					System.out.println(" - Dead End - \n");
+					System.out.println(" - Dead End \n");
 					break;
 				}
 				
 				current = adjacent.get(random.nextInt(adjacent.size()));
 				while(visited.contains(current)) {
-					for(int count = 0; count < 100000; count++) {
-						random.nextInt(adjacent.size());
-					}
 					current = adjacent.get(random.nextInt(adjacent.size()));
 				}
 				
@@ -477,8 +493,7 @@ public class Grapher {
 				
 				if(current.equals(to)) {
 					printPath(path);
-					System.out.println(" - Found Path - ");
-					System.out.println();
+					System.out.println(" - Found Path ");
 					return new Path(path, "RANDOM");
 				}
 				
@@ -490,7 +505,8 @@ public class Grapher {
 					}
 				
 				if(adjacent.isEmpty()) {
-					System.out.println(" - Dead End - \n");
+					printPath(path);
+					System.out.println(" - Dead End \n");
 					dead_end = true;
 				}		
 			}
@@ -533,14 +549,18 @@ public class Grapher {
 	public class Context {
 
 		public searchStrategy searchType;
-
+		
+		
 		public Context(Algorithm algo) {
-			if(algo == Algorithm.BFS)
+			if(algo == Algorithm.BFS) {
 				searchType = new strategyBFS();
-			else if (algo == Algorithm.DFS)
+			}
+			else if (algo == Algorithm.DFS) {
 				searchType = new strategyDFS();
-			else if (algo == Algorithm.RANDOM)
+			}
+			else if (algo == Algorithm.RANDOM) {
 				searchType = new strategyRANDOM();
+			}
 			else
 				searchType = null;
 		}
@@ -553,109 +573,28 @@ public class Grapher {
 		}
 	}
 
-	public Path GraphSearch(String from, String to, Algorithm algo) {
-
+	public Path GraphSearch(String from, String to, Algorithm algo){
+		
+		
 		Context searcher = new Context(algo);
+		
+		System.out.println("--------------------------------------------------------------\n");
+		
+		if(algo == Algorithm.BFS) 
+			System.out.println(" Breath first search: \n");
+		else if (algo == Algorithm.DFS) 
+			System.out.println(" Depth first search: \n");
+		else if (algo == Algorithm.RANDOM) 
+			System.out.println(" Random walk search: \n");
+
 
 		Path path = searcher.search(from, to);
 		System.out.println(path.toString());
+
+		System.out.println("--------------------------------------------------------------");
+		
 		return path;
 
-	}
-
-	public Path GraphSearchBFS(String from, String to) {
-
-		if (graphExists() == false)
-			return null;
-
-		if (nodeExists(from) == null)
-			throw new IllegalArgumentException("Node " + from + " as source node doesn't exist in graph\n");
-
-		if (nodeExists(to) == null)
-			throw new IllegalArgumentException("Node " + to + " as a node doesn't exist in graph\n");
-
-		ArrayList<String> queue = new ArrayList<>();
-		ArrayList<String> visited = new ArrayList<>();
-		HashMap<String, String> parent = new HashMap<>();
-
-		queue.add(from);
-		visited.add(from);
-		parent.put(from, "none");
-
-		while (!queue.isEmpty()) {
-			String current = queue.remove(0);
-
-			for (Link link : edgeList) {
-				if (link.from().name().value().equals(current)) {
-					String child = link.to().name().value();
-
-					if (!visited.contains(child)) {
-						queue.add(child);
-						visited.add(child);
-						parent.put(child, current);
-
-						if (child.equals(to)) {
-
-							ArrayList<String> path = buildPath(child, from, parent);
-
-							return new Path(path, "BFS");
-						}
-					}
-				}
-			}
-		}
-
-		return null;
-	}
-
-	public Path GraphSearchDFS(String from, String to) {
-
-		if (graphExists() == false)
-			return null;
-
-		if (nodeExists(from) == null)
-			throw new IllegalArgumentException("Node " + from + " as source node doesn't exist in graph\n");
-
-		if (nodeExists(to) == null)
-			throw new IllegalArgumentException("Node " + to + " as a node doesn't exist in graph\n");
-
-		ArrayList<String> stack = new ArrayList<>();
-		ArrayList<String> visited = new ArrayList<>();
-		HashMap<String, String> parent = new HashMap<>();
-
-		stack.add(from);
-		visited.add(from);
-		parent.put(from, "none");
-
-		while (!stack.isEmpty()) {
-
-			String current = stack.get(stack.size() - 1);
-
-			for (Link link : edgeList) {
-				for (Link edge : edgeList) {
-
-					if (edge.from().name().value().equals(current)) {
-						String next = edge.to().name().value();
-
-						if (!visited.contains(next)) {
-							stack.add(next);
-							visited.add(next);
-							parent.put(next, current);
-							current = next;
-						}
-
-						if (current.equals(to)) {
-
-							ArrayList<String> path = buildPath(current, from, parent);
-
-							return new Path(path, "DFS");
-						}
-					}
-				}
-			}
-			stack.remove(stack.size() - 1);
-		}
-		return null;
 	}
 
 	public void outputDOTGraph(String path) throws IOException {
@@ -721,8 +660,8 @@ public class Grapher {
 	public static void main(String[] args) throws IOException {
 
 		Grapher grapher = new Grapher();
-		String test = "input.dot";
-		grapher.parseGraph(test);
+
+		grapher.parseGraph("test.txt");
 		grapher.outputGraph("graphData.txt");
 
 		// grapher.removeNode("b");
@@ -733,13 +672,9 @@ public class Grapher {
 		// grapher.removeEdge("a","e");
 		
 		String start = "a";
-		String end = "c";
-
+		String end = "i";
+		grapher.GraphSearch(start, end, Algorithm.RANDOM);
 		grapher.GraphSearch(start, end, Algorithm.BFS);
 		grapher.GraphSearch(start, end, Algorithm.DFS);
-		grapher.GraphSearch(start, end, Algorithm.RANDOM);
-
-		grapher.outputGraph("graphOutput.txt");
-
 	}
 }
