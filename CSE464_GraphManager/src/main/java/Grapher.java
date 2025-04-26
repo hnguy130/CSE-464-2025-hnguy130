@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import java.util.Random;
+
 import guru.nidi.graphviz.model.*;
 import guru.nidi.graphviz.parse.Parser;
 
@@ -12,7 +14,7 @@ import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
 
 enum Algorithm {
-	BFS, DFS
+	BFS, DFS, RANDOM
 }
 
 public class Grapher {
@@ -389,6 +391,117 @@ public class Grapher {
 		}
 	}
 	
+	public void printPath(ArrayList<String> path) {
+		
+		System.out.print(" visiting Path ");
+		
+		for(int i = 0; i <= path.size() - 1; i++) {
+			
+			String current = path.get(i);
+			
+			if(i == path.size() - 1)
+				System.out.print(current);
+			else
+				System.out.print(current + " -> ");
+		}
+		
+		System.out.println("");
+	}
+	
+	public class searchRANDOM extends templateSearch {
+		
+		Random random = new Random();
+		
+		@Override
+		public Path searchHelper(String from, String to) {
+			
+			// try finding path for at most 100 searches, then return null
+			
+			ArrayList<String> path;
+			ArrayList<String> visited;
+			ArrayList<String> adjacent;
+ 			
+			System.out.println("RANDOM: \n");
+			
+			for(int i = 0; i < 100; i++) {
+				
+				path = new ArrayList<>();
+				path.add(from);
+				visited = new ArrayList<>();
+				visited.add(from);
+				adjacent = new ArrayList<>();
+				
+				//current node at start
+				String current = from;
+				
+				System.out.println(" - New Search - ");
+				
+				//check if there are adjacent nodes
+				// if none, return null path
+				//if yes, continue searching
+				for(Link edge : edgeList) {
+					if(edge.from().name().value().equals(current))
+						adjacent.add(edge.to().name().value());
+				}
+				
+				if(adjacent.isEmpty())
+					return null;
+				
+				boolean dead_end = false;
+				
+				while (dead_end == false) {
+
+				//selecting random adjacent node
+				boolean all_visited = true;
+				for(String node : adjacent)
+					if(visited.contains(node) == false) {
+						all_visited = false;
+						break;
+					}
+				if(all_visited == true) {
+					printPath(path);
+					System.out.println(" - Dead End - \n");
+					break;
+				}
+				
+				current = adjacent.get(random.nextInt(adjacent.size()));
+				while(visited.contains(current)) {
+					for(int count = 0; count < 100000; count++) {
+						random.nextInt(adjacent.size());
+					}
+					current = adjacent.get(random.nextInt(adjacent.size()));
+				}
+				
+				path.add(current);
+				visited.add(current);
+				
+				if(current.equals(to)) {
+					printPath(path);
+					System.out.println(" - Found Path - ");
+					System.out.println();
+					return new Path(path, "RANDOM");
+				}
+				
+				adjacent.clear();
+				//gathering adjacent nodes
+					for(Link edge : edgeList) {
+						if(edge.from().name().value().equals(current))
+							adjacent.add(edge.to().name().value());
+					}
+				
+				if(adjacent.isEmpty()) {
+					System.out.println(" - Dead End - \n");
+					dead_end = true;
+				}		
+			}
+			
+		}
+			
+			return null;
+	}
+		
+	}
+	
 	public interface searchStrategy {
 		public Path search(String from, String to);
 	}
@@ -409,6 +522,14 @@ public class Grapher {
 		}
 	}
 	
+	public class strategyRANDOM implements searchStrategy{
+		public searchRANDOM random = new searchRANDOM();
+		
+		public Path search(String from, String to) {
+			return random.search(from, to);
+		}
+	}
+	
 	public class Context {
 
 		public searchStrategy searchType;
@@ -418,6 +539,8 @@ public class Grapher {
 				searchType = new strategyBFS();
 			else if (algo == Algorithm.DFS)
 				searchType = new strategyDFS();
+			else if (algo == Algorithm.RANDOM)
+				searchType = new strategyRANDOM();
 			else
 				searchType = null;
 		}
@@ -598,7 +721,7 @@ public class Grapher {
 	public static void main(String[] args) throws IOException {
 
 		Grapher grapher = new Grapher();
-		String test = "test.txt";
+		String test = "input.dot";
 		grapher.parseGraph(test);
 		grapher.outputGraph("graphData.txt");
 
@@ -608,9 +731,13 @@ public class Grapher {
 		// grapher.removeNodes(nodes);
 
 		// grapher.removeEdge("a","e");
+		
+		String start = "a";
+		String end = "c";
 
-		grapher.GraphSearch("a", "g", Algorithm.BFS);
-		grapher.GraphSearch("a", "g", Algorithm.DFS);
+		grapher.GraphSearch(start, end, Algorithm.BFS);
+		grapher.GraphSearch(start, end, Algorithm.DFS);
+		grapher.GraphSearch(start, end, Algorithm.RANDOM);
 
 		grapher.outputGraph("graphOutput.txt");
 
