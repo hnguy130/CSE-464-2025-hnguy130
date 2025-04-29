@@ -1,13 +1,47 @@
 Graph data: 
 
-Node amount: 6
-Label of nodes: c , d , e , f , g , h
+Node amount: 14
+Label of nodes: c , d , e , f , g , h , i , j , k , l , m , n , o , p
 
-Edge amount: 6
+Edge amount: 40
 Label of edges: 
-c -> d
-e -> f
-e -> g
-f -> g
-f -> h
-g -> h
+c -> e
+c -> f
+d -> g
+d -> h
+e -> c
+e -> h
+e -> i
+f -> c
+f -> i
+f -> j
+g -> d
+g -> k
+h -> d
+h -> e
+h -> k
+h -> l
+i -> e
+i -> f
+i -> l
+i -> m
+j -> f
+j -> m
+k -> g
+k -> h
+k -> n
+l -> h
+l -> i
+l -> n
+l -> o
+m -> i
+m -> j
+m -> o
+n -> k
+n -> l
+n -> p
+o -> l
+o -> m
+o -> p
+p -> n
+p -> o

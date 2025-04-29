@@ -1,2 +1,2 @@
-BFS: a->e->g
-DFS: a->e->f->g
+ Path = a -> b -> d -> g
+ Path = a -> b -> d -> g
