@@ -524,25 +524,25 @@ public class Grapher {
 	}
 	
 	public class strategyBFS implements searchStrategy{
-		public searchBFS bfs = new searchBFS();
 		
 		public Path search(String from, String to) {
+			searchBFS bfs = new searchBFS();
 			return bfs.search(from, to);
 		}
 	}
 	
 	public class strategyDFS implements searchStrategy{
-		public searchDFS dfs = new searchDFS();
 		
 		public Path search(String from, String to) {
+			searchDFS dfs = new searchDFS();
 			return dfs.search(from, to);
 		}
 	}
 	
 	public class strategyRANDOM implements searchStrategy{
-		public searchRANDOM random = new searchRANDOM();
 		
 		public Path search(String from, String to) {
+			searchRANDOM random = new searchRANDOM();
 			return random.search(from, to);
 		}
 	}
