@@ -17,7 +17,7 @@ public class Path {
 	@Override
 	public String toString() {
 
-		String path = " Path" + " = ";
+		String path = " " + searchType + " Path" + " = ";
 
 		if (nodes == null || nodes.size() == 0) {
 			System.out.println("Path doesn't exist");

@@ -266,8 +266,9 @@ public class Grapher {
 			}
 		}
 		if (edge == null) {
-			throw new IllegalArgumentException("Node " + to1 + " as a destination node doesn't exist in graph\n");
+			throw new IllegalArgumentException("Node " + to1 + " as a destination node doesn't exist in graph from start node " + from1 + "\n");
 		}
+		
 		from.links().remove(edge);
 		System.out.println("Edge from " + from1 + " to " + to1 + " has been removed from graph\n");
 		prepare();

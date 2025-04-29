@@ -1,2 +1,2 @@
- Path = a -> b -> d -> g
- Path = a -> b -> d -> g
+ BFS Path = a -> b -> d -> h -> l -> o
+ DFS Path = a -> b -> d -> g -> k -> h -> e -> c -> f -> i -> l -> n -> p -> o

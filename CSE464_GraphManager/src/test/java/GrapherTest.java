@@ -61,7 +61,7 @@ public class GrapherTest {
 		String output = "output3.txt";
 		grapher.parseGraph(test);
 		
-		grapher.removeEdge("e", "f");
+		grapher.removeEdge("a", "b");
 		
 		grapher.outputGraph(output);
 
@@ -105,10 +105,10 @@ public class GrapherTest {
 		grapher.parseGraph(test);
 		
 		Files.writeString(Paths.get(output),
-				grapher.GraphSearch("a", "g", Algorithm.BFS).toString());
+				grapher.GraphSearch("a", "o", Algorithm.BFS).toString());
 		
 		Files.writeString(Paths.get(output),
-				grapher.GraphSearch("a", "g", Algorithm.DFS).toString()
+				grapher.GraphSearch("a", "o", Algorithm.DFS).toString()
 				,StandardOpenOption.APPEND
 				,StandardOpenOption.CREATE);
 
