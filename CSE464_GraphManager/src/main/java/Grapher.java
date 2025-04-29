@@ -644,7 +644,7 @@ public class Grapher {
 
 	// runs afer adding node, edge, parsing dot file
 	public void prepare() {
-		nodeList = new ArrayList<>();
+		nodeList = new ArrayList<>(); 
 		edgeList = new ArrayList<>();
 
 		for (MutableNode node : graph.nodes()) {
